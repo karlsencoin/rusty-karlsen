@@ -1,0 +1,221 @@
+name: Build and upload assets
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag (e.g. v3.1.1)'
+        required: true
+        default: 'v3.1.1'
+
+env:
+  TAG_NAME: ${{ github.event.release.tag_name || github.event.inputs.tag_name || 'v3.1.1' }}
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            TARGET: linux-musl/amd64
+          - os: windows-latest
+            TARGET: windows-msvc/amd64
+          - os: macos-latest
+            TARGET: macos/amd64
+          - os: macos-latest
+            TARGET: macos/aarch64
+    name: Building, ${{ matrix.TARGET }}
+    steps:
+      - name: Fix CRLF on Windows
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf false
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo Build Outputs
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache Toolchain
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/x-tools
+          key: ${{ runner.os }}-musl-${{ hashFiles('**/musl-toolchain/preset.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-musl-
+
+      - name: Install protoc on Linux
+        if: runner.os == 'Linux'
+        uses: taiki-e/install-action@v2
+        with:
+          tool: protoc
+
+      - name: Install protoc on macOS
+        if: runner.os == 'macOS'
+        uses: taiki-e/install-action@v2
+        with:
+          tool: protoc
+
+      - name: Install msys2 on Windows
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: clang64
+          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-protobuf zip
+
+      - name: Build on Linux
+        if: matrix.TARGET == 'linux-musl/amd64'
+        run: |
+          source musl-toolchain/build.sh
+          cd $GITHUB_WORKSPACE
+
+          cargo --verbose build --bin karlsend --bin rothschild --bin karlsen-wallet --release --target x86_64-unknown-linux-musl
+          mkdir bin || true
+          cp target/x86_64-unknown-linux-musl/release/karlsend bin/
+          cp target/x86_64-unknown-linux-musl/release/rothschild bin/
+          cp target/x86_64-unknown-linux-musl/release/karlsen-wallet bin/
+          archive="bin/rusty-karlsen-${{ env.TAG_NAME }}-linux-musl-amd64.zip"
+          zip -r "${archive}" ./bin/*
+          echo "archive=${archive}" >> $GITHUB_ENV
+
+      - name: Build on Windows for windows-msvc/amd64
+        if: matrix.TARGET == 'windows-msvc/amd64'
+        shell: msys2 {0}
+        run: |
+          export PATH="${PATH}:/c/Users/runneradmin/.cargo/bin"
+          rustup target add x86_64-pc-windows-msvc
+          cargo build --target x86_64-pc-windows-msvc --bin karlsend --release
+          cargo build --target x86_64-pc-windows-msvc --bin rothschild --release
+          cargo build --target x86_64-pc-windows-msvc --bin karlsen-wallet --release
+          mkdir bin || true
+          cp target/x86_64-pc-windows-msvc/release/karlsend.exe bin/
+          cp target/x86_64-pc-windows-msvc/release/rothschild.exe bin/
+          cp target/x86_64-pc-windows-msvc/release/karlsen-wallet.exe bin/
+          archive="bin/rusty-karlsen-${{ env.TAG_NAME }}-windows-msvc-amd64.zip"
+          zip -r "${archive}" ./bin/*
+
+      - name: Build on macOS for macos/amd64
+        if: matrix.TARGET == 'macos/amd64'
+        run: |
+          rustup target add x86_64-apple-darwin
+          cargo build --target x86_64-apple-darwin --bin karlsend --release
+          cargo build --target x86_64-apple-darwin --bin rothschild --release
+          cargo build --target x86_64-apple-darwin --bin karlsen-wallet --release
+          mkdir bin || true
+          cp target/x86_64-apple-darwin/release/karlsend bin/
+          cp target/x86_64-apple-darwin/release/rothschild bin/
+          cp target/x86_64-apple-darwin/release/karlsen-wallet bin/
+          archive="bin/rusty-karlsen-${{ env.TAG_NAME }}-macos-amd64.zip"
+          zip -r "${archive}" ./bin/*
+
+      - name: Build on macOS for macos/aarch64
+        if: matrix.TARGET == 'macos/aarch64'
+        run: |
+          rustup target add aarch64-apple-darwin
+          cargo build --target aarch64-apple-darwin --bin karlsend --release
+          cargo build --target aarch64-apple-darwin --bin rothschild --release
+          cargo build --target aarch64-apple-darwin --bin karlsen-wallet --release
+          mkdir bin || true
+          cp target/aarch64-apple-darwin/release/karlsend bin/
+          cp target/aarch64-apple-darwin/release/rothschild bin/
+          cp target/aarch64-apple-darwin/release/karlsen-wallet bin/
+          archive="bin/rusty-karlsen-${{ env.TAG_NAME }}-macos-aarch64.zip"
+          zip -r "${archive}" ./bin/*
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          files: |
+            bin/*.zip
+
+  build-wasm:
+    name: Building WASM32 SDK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install Protoc
+        uses: taiki-e/install-action@v2
+        with:
+          tool: protoc
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install llvm
+        id: install_llvm
+        continue-on-error: true
+        run: |
+          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+          sudo apt-get install -y clang-15 lldb-15 lld-15 clangd-15 clang-tidy-15 clang-format-15 clang-tools-15 llvm-15-dev lld-15 lldb-15 llvm-15-tools libomp-15-dev libc++-15-dev libc++abi-15-dev libclang-common-15-dev libclang-15-dev libclang-cpp15-dev libunwind-15-dev
+          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/lib/llvm-15/bin/clang++ 100
+          sudo update-alternatives --install /usr/bin/clang clang /usr/lib/llvm-15/bin/clang 100
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/lib/llvm-15/bin/clang-format 100
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/lib/llvm-15/bin/clang-tidy 100
+          sudo update-alternatives --install /usr/bin/run-clang-tidy run-clang-tidy /usr/lib/llvm-15/bin/run-clang-tidy 100
+          sudo update-alternatives --install /usr/bin/cc cc /usr/lib/llvm-15/bin/clang 0
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/lib/llvm-15/bin/clang++ 0
+
+      - name: Install gcc-multilib
+        run: |
+          sudo apt-get update
+          sudo apt install -y gcc-multilib
+
+      - name: Install stable toolchain
+        if: steps.install_llvm.outcome == 'success' && steps.install_llvm.conclusion == 'success'
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
+
+      - name: Add wasm32 target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install NodeJS dependencies
+        run: npm install --global typedoc typescript
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build WASM32 SDK
+        run: |
+          cd wasm
+          bash build-release
+          cd release
+          zip -q -r karlsen-wasm32-sdk-${{ env.TAG_NAME }}.zip karlsen-wasm32-sdk
+
+      - name: Upload WASM32 SDK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          files: wasm/release/*.zip
