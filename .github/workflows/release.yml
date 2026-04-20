@@ -9,14 +9,14 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Build Linux
         run: |
           cargo build --release
           cd target/release
           tar -czf ../../rusty-karlsen-v3.1.1-linux-musl-amd64.tar.gz karlsend
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: linux-binary
           path: rusty-karlsen-v3.1.1-linux-musl-amd64.tar.gz
@@ -24,14 +24,14 @@ jobs:
   build-macos-amd64:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Build macOS AMD64
         run: |
           cargo build --release
           cd target/release
           zip ../../rusty-karlsen-v3.1.1-macos-amd64.zip karlsend
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: macos-amd64-binary
           path: rusty-karlsen-v3.1.1-macos-amd64.zip
@@ -39,7 +39,7 @@ jobs:
   build-macos-aarch64:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-apple-darwin
@@ -48,7 +48,7 @@ jobs:
           cargo build --release --target aarch64-apple-darwin
           cd target/aarch64-apple-darwin/release
           zip ../../../rusty-karlsen-v3.1.1-macos-aarch64.zip karlsend
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: macos-aarch64-binary
           path: rusty-karlsen-v3.1.1-macos-aarch64.zip
@@ -56,14 +56,14 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Build Windows
         run: |
           cargo build --release
           cd target/release
           Compress-Archive -Path karlsend.exe -DestinationPath ../../rusty-karlsen-v3.1.1-windows-msvc-amd64.zip
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: windows-binary
           path: rusty-karlsen-v3.1.1-windows-msvc-amd64.zip
@@ -71,7 +71,7 @@ jobs:
   build-wasm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
@@ -80,7 +80,7 @@ jobs:
           cd wasm
           cargo build --release --target wasm32-unknown-unknown
           zip ../karlsen-wasm32-sdk-v3.1.1.zip target/wasm32-unknown-unknown/release/*.wasm
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: wasm-sdk
           path: karlsen-wasm32-sdk-v3.1.1.zip
@@ -89,13 +89,15 @@ jobs:
     needs: [build-linux, build-macos-amd64, build-macos-aarch64, build-windows, build-wasm]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            linux-binary/rusty-karlsen-v3.1.1-linux-musl-amd64.tar.gz
-            macos-amd64-binary/rusty-karlsen-v3.1.1-macos-amd64.zip
-            macos-aarch64-binary/rusty-karlsen-v3.1.1-macos-aarch64.zip
-            windows-binary/rusty-karlsen-v3.1.1-windows-msvc-amd64.zip
-            wasm-sdk/karlsen-wasm32-sdk-v3.1.1.zip
+            artifacts/linux-binary/rusty-karlsen-v3.1.1-linux-musl-amd64.tar.gz
+            artifacts/macos-amd64-binary/rusty-karlsen-v3.1.1-macos-amd64.zip
+            artifacts/macos-aarch64-binary/rusty-karlsen-v3.1.1-macos-aarch64.zip
+            artifacts/windows-binary/rusty-karlsen-v3.1.1-windows-msvc-amd64.zip
+            artifacts/wasm-sdk/karlsen-wasm32-sdk-v3.1.1.zip
