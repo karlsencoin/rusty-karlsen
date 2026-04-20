@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wasm-pack build --target web --out-name karlsen-rpc --out-dir web/karlsen-rpc --features wasm32-sdk

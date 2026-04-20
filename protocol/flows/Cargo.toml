@@ -1,0 +1,42 @@
+[package]
+name = "karlsen-p2p-flows"
+description = "Karlsen p2p flows"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+karlsen-core.workspace = true
+karlsen-consensus-core.workspace = true
+karlsen-consensus-notify.workspace = true
+karlsen-p2p-lib.workspace = true
+karlsen-p2p-mining.workspace = true
+karlsen-utils.workspace = true
+karlsen-utils-tower.workspace = true
+karlsen-hashes.workspace = true
+karlsen-muhash.workspace = true
+karlsen-connectionmanager.workspace = true
+karlsen-addressmanager.workspace = true
+karlsen-consensusmanager.workspace = true
+karlsen-mining.workspace = true
+karlsen-notify.workspace = true
+
+async-trait.workspace = true
+futures = { workspace = true, features = ["alloc"] }
+indexmap.workspace = true
+itertools.workspace = true
+log.workspace = true
+parking_lot.workspace = true
+rand.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "signal"] }
+tokio-stream = { workspace = true, features = ["net"] }
+uuid = { workspace = true, features = ["v4", "fast-rng"] }
+chrono.workspace = true
+
+[lints]
+workspace = true

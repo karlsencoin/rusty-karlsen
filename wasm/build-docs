@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+./build-web $@
+
+if [ "$1" == "--keygen" ]; then
+    echo "building keygen"
+    typedoc --name "Karlsen WASM32 SDK - Key Generation" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/karlsen-keygen ./build/docs/karlsen-keygen.ts
+elif [ "$1" == "--rpc" ]; then
+    echo "building rpc"
+    typedoc --name "Karlsen WASM32 SDK - RPC" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/karlsen-rpc ./build/docs/karlsen-rpc.ts
+elif [ "$1" == "--core" ]; then
+    echo "building core"
+    typedoc --name "Karlsen WASM32 SDK - Core" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/karlsen-core ./build/docs/karlsen-core.ts
+elif [ "$1" == "--sdk" ]; then
+    echo "building full"
+    typedoc --name "Karlsen WASM32 SDK" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/karlsen ./build/docs/karlsen.ts
+else
+    echo "building keygen"
+    typedoc --name "Karlsen WASM32 SDK - Key Generation" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/karlsen-keygen ./build/docs/karlsen-keygen.ts
+    echo "building rpc"
+    typedoc --name "Karlsen WASM32 SDK - RPC" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/karlsen-rpc ./build/docs/karlsen-rpc.ts
+    echo "building core"
+    typedoc --name "Karlsen WASM32 SDK - Core" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/karlsen-core ./build/docs/karlsen-core.ts
+    echo "building full"
+    typedoc --name "Karlsen WASM32 SDK" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/karlsen ./build/docs/karlsen.ts
+
+fi

@@ -1,0 +1,44 @@
+[package]
+name = "karlsen-mining"
+description = "Karlsen mining"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+karlsen-addresses.workspace = true
+karlsen-consensus-core.workspace = true
+karlsen-consensusmanager.workspace = true
+karlsen-core.workspace = true
+karlsen-hashes.workspace = true
+karlsen-mining-errors.workspace = true
+karlsen-muhash.workspace = true
+karlsen-txscript.workspace = true
+karlsen-utils.workspace = true
+
+futures-util.workspace = true
+itertools.workspace = true
+log.workspace = true
+parking_lot.workspace = true
+rand.workspace = true
+serde.workspace = true
+smallvec.workspace = true
+sweep-bptree = "0.4.1"
+thiserror.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "signal"] }
+
+[dev-dependencies]
+karlsen-txscript.workspace = true
+criterion.workspace = true
+secp256k1.workspace = true
+
+[[bench]]
+name = "bench"
+harness = false
+
+[lints]
+workspace = true

@@ -1,0 +1,77 @@
+[package]
+name = "karlsen-wasm"
+description = "Karlsen WASM bindings"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+repository.workspace = true
+# wasm-pack requires this value to be a string
+# (it can not be derived from the workspace)
+license = "ISC"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+cfg-if.workspace = true
+js-sys.workspace = true
+karlsen-addresses.workspace = true
+karlsen-bip32.workspace = true
+karlsen-consensus-core.workspace = true
+karlsen-consensus-wasm.workspace = true
+karlsen-core.workspace = true
+karlsen-math.workspace = true
+karlsen-pow.workspace = true
+karlsen-txscript.workspace = true
+karlsen-rpc-core.workspace = true
+karlsen-utils.workspace = true
+karlsen-wasm-core.workspace = true
+karlsen-wallet-core.workspace = true
+karlsen-wallet-keys.workspace = true
+karlsen-wrpc-client.workspace = true
+karlsen-wrpc-wasm.workspace = true
+num.workspace = true
+wasm-bindgen.workspace = true
+workflow-log.workspace = true
+workflow-core.workspace = true
+workflow-wasm.workspace = true
+
+[features]
+wasm32-sdk = [
+    "karlsen-wallet-core/wasm32-sdk",
+    "karlsen-pow/wasm32-sdk",
+    "karlsen-txscript/wasm32-sdk",
+]
+wasm32-core = [
+    "karlsen-wallet-core/wasm32-core",
+    "karlsen-pow/wasm32-sdk",
+    "karlsen-txscript/wasm32-sdk",
+]
+wasm32-rpc = [
+    "karlsen-consensus-core/wasm32-sdk",
+    "karlsen-consensus-wasm/wasm32-sdk",
+    "karlsen-wrpc-client/wasm32-sdk",
+    "karlsen-wrpc-wasm/wasm32-sdk",
+]
+wasm32-keygen = []
+default = []
+
+[package.metadata.docs.rs]
+targets = ["wasm32-unknown-unknown"]
+
+[package.metadata.emanate.wasm]
+targets = [
+    { target = "nodejs", out-dir = "nodejs/karlsen" },
+    { target = "web", out-dir = "web/karlsen" },
+]
+folder = "setup"
+
+
+[package.metadata.wasm-pack.profile.release]
+# We require these options:
+wasm-opt = ["-O","--enable-bulk-memory","--enable-nontrapping-float-to-int"]
+
+[lints]
+workspace = true

@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <script type="module">
+            import * as karlsen from './karlsen-rpc/karlsen-rpc.js';
+            (async () => {
+                await karlsen.default('./karlsen-rpc/karlsen-rpc_bg.wasm');
+                console.log(karlsen.version());
+            })();
+        </script>
+    </head>
+    <body></body>
+</html>

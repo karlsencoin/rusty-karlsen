@@ -1,0 +1,72 @@
+[package]
+name = "karlsend"
+description = "Karlsen full node daemon"
+keywords = ["karlsen", "blockdag"]
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "karlsend_lib"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+karlsen-alloc.workspace = true # This changes the global allocator for all of the next dependencies so should be kept first
+
+karlsen-addresses.workspace = true
+karlsen-addressmanager.workspace = true
+karlsen-consensus-core.workspace = true
+karlsen-consensus-notify.workspace = true
+karlsen-consensus.workspace = true
+karlsen-consensusmanager.workspace = true
+karlsen-core.workspace = true
+karlsen-database.workspace = true
+karlsen-grpc-server.workspace = true
+karlsen-hashes.workspace = true
+karlsen-index-processor.workspace = true
+karlsen-mining.workspace = true
+karlsen-notify.workspace = true
+karlsen-p2p-flows.workspace = true
+karlsen-p2p-lib.workspace = true
+karlsen-p2p-mining.workspace = true
+karlsen-perf-monitor.workspace = true
+karlsen-rpc-core.workspace = true
+karlsen-rpc-service.workspace = true
+karlsen-txscript.workspace = true
+karlsen-utils.workspace = true
+karlsen-utils-tower.workspace = true
+karlsen-utxoindex.workspace = true
+karlsen-wrpc-server.workspace = true
+
+async-channel.workspace = true
+cfg-if.workspace = true
+clap.workspace = true
+dhat = { workspace = true, optional = true }
+dirs.workspace = true
+futures-util.workspace = true
+itertools.workspace = true
+log.workspace = true
+num_cpus.workspace = true
+rand.workspace = true
+rayon.workspace = true
+rocksdb.workspace = true
+serde.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["rt", "macros", "rt-multi-thread"] }
+workflow-log.workspace = true
+
+toml = "0.8.10"
+serde_with = "3.7.0"
+
+[features]
+heap = ["dhat", "karlsen-alloc/heap"]
+devnet-prealloc = ["karlsen-consensus/devnet-prealloc"]
+semaphore-trace = ["karlsen-utils/semaphore-trace"]
+
+[lints]
+workspace = true
