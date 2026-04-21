@@ -197,7 +197,7 @@ indexmap = "2.1.0"
 intertrait = "0.2.2"
 ipnet = "2.9.0"
 itertools = "0.13.0"
-js-sys = ">=0.3.70, <0.3.95"
+js-sys = "0.3.83"
 keccak = "0.1.4"
 tiny-keccak = { version = "2.0.2", features = ["keccak"] }
 blake3 = "1.3.1"
@@ -259,7 +259,7 @@ tonic = { version = "0.12.3", features = ["tls-webpki-roots", "gzip", "transport
 tonic-build = { version = "0.12.3", features = ["prost"] }
 triggered = "0.1.2"
 uuid = { version = "1.16.0", features = ["v4", "fast-rng", "serde", "js"] }
-wasm-bindgen = { version = "0.2.106", features = ["serde-serialize"] }
+wasm-bindgen = { version = "=0.2.106", features = ["serde-serialize"] }
 wasm-bindgen-futures = "0.4.43"
 wasm-bindgen-test = "0.3.50"
 web-sys = "0.3.70"
