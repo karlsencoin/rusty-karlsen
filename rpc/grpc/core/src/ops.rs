@@ -88,6 +88,7 @@ pub enum KarlsendPayloadOps {
     GetFeeEstimateExperimental,
     GetCurrentBlockColor,
     GetUtxoReturnAddress,
+    GetBlockRewardInfo,
 
     // Subscription commands for starting/stopping notifications
     NotifyBlockAdded,

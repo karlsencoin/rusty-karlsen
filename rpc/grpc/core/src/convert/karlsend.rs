@@ -64,6 +64,7 @@ pub mod karlsend_request_convert {
     impl_into_karlsend_request!(GetFeeEstimateExperimental);
     impl_into_karlsend_request!(GetCurrentBlockColor);
     impl_into_karlsend_request!(GetUtxoReturnAddress);
+    impl_into_karlsend_request!(GetBlockRewardInfo);
 
     impl_into_karlsend_request!(NotifyBlockAdded);
     impl_into_karlsend_request!(NotifyNewBlockTemplate);
@@ -202,6 +203,7 @@ pub mod karlsend_response_convert {
     impl_into_karlsend_response!(GetFeeEstimateExperimental);
     impl_into_karlsend_response!(GetCurrentBlockColor);
     impl_into_karlsend_response!(GetUtxoReturnAddress);
+    impl_into_karlsend_response!(GetBlockRewardInfo);
 
     impl_into_karlsend_notify_response!(NotifyBlockAdded);
     impl_into_karlsend_notify_response!(NotifyNewBlockTemplate);

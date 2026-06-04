@@ -1068,6 +1068,36 @@ mod mockery {
 
     test!(GetDaaScoreTimestampEstimateResponse);
 
+    impl Mock for RpcBlockColor {
+        fn mock() -> Self {
+            RpcBlockColor::Blue
+        }
+    }
+
+    impl Mock for GetBlockRewardInfoRequest {
+        fn mock() -> Self {
+            GetBlockRewardInfoRequest { hash: mock() }
+        }
+    }
+
+    test!(GetBlockRewardInfoRequest);
+
+    impl Mock for GetBlockRewardInfoResponse {
+        fn mock() -> Self {
+            GetBlockRewardInfoResponse {
+                block_color: mock(),
+                header: mock(),
+                confirmation_count: mock(),
+                merging_chain_block_hash: mock(),
+                reward_amount: mock(),
+            }
+        }
+    }
+
+    test!(GetBlockRewardInfoResponse);
+
+
+
     impl Mock for NotifyBlockAddedRequest {
         fn mock() -> Self {
             NotifyBlockAddedRequest { command: Command::Start }

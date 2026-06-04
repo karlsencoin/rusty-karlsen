@@ -3,7 +3,7 @@
 //! We use newtypes in order to simplify changing the underlying lock in the future
 
 use karlsen_consensus_core::{
-    acceptance_data::AcceptanceData,
+    acceptance_data::{AcceptanceData, MergedBlockContext, MergesetBlockAcceptanceData},
     api::{BlockCount, BlockValidationFutures, ConsensusApi, ConsensusStats, DynConsensus},
     block::Block,
     blockstatus::BlockStatus,
@@ -262,7 +262,11 @@ impl ConsensusSessionOwned {
         self.clone().spawn_blocking(move |c| c.get_current_block_color(hash)).await
     }
 
-    /// retention period root refers to the earliest block from which the current node has full header & block data  
+    pub async fn async_get_merged_block_context(&self, hash: Hash) -> ConsensusResult<Option<MergedBlockContext>> {
+        self.clone().spawn_blocking(move |c| c.get_merged_block_context(hash)).await
+    }
+
+    /// retention period root refers to the earliest block from which the current node has full header & block data
     pub async fn async_get_retention_period_root(&self) -> Hash {
         self.clone().spawn_blocking(|c| c.get_retention_period_root()).await
     }

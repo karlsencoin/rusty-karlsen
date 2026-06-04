@@ -433,6 +433,22 @@ from!(item: RpcResult<&karlsen_rpc_core::GetCurrentBlockColorResponse>, protowir
     Self { blue: item.blue, error: None }
 });
 
+from!(item: &karlsen_rpc_core::GetBlockRewardInfoRequest, protowire::GetBlockRewardInfoRequestMessage, {
+    Self {
+        hash: item.hash.to_string()
+    }
+});
+from!(item: RpcResult<&karlsen_rpc_core::GetBlockRewardInfoResponse>, protowire::GetBlockRewardInfoResponseMessage, {
+    Self {
+        header: Some((&item.header).into()),
+        block_color: item.block_color.into(),
+        confirmation_count: item.confirmation_count,
+        merging_chain_block_hash: item.merging_chain_block_hash.as_ref().map(|x| x.to_string()),
+        reward_amount: item.reward_amount,
+        error: None,
+    }
+});
+
 from!(item: &karlsen_rpc_core::GetUtxoReturnAddressRequest, protowire::GetUtxoReturnAddressRequestMessage, {
     Self {
         txid: item.txid.to_string(),
@@ -927,6 +943,24 @@ try_from!(item: &protowire::GetCurrentBlockColorRequestMessage, karlsen_rpc_core
 try_from!(item: &protowire::GetCurrentBlockColorResponseMessage, RpcResult<karlsen_rpc_core::GetCurrentBlockColorResponse>, {
     Self {
         blue: item.blue
+    }
+});
+try_from!(item: &protowire::GetBlockRewardInfoRequestMessage, karlsen_rpc_core::GetBlockRewardInfoRequest, {
+    Self {
+        hash: RpcHash::from_str(&item.hash)?
+    }
+});
+try_from!(item: &protowire::GetBlockRewardInfoResponseMessage, RpcResult<karlsen_rpc_core::GetBlockRewardInfoResponse>, {
+    Self {
+        header: item
+            .header
+            .as_ref()
+            .ok_or_else(|| RpcError::MissingRpcFieldError("GetBlockRewardInfoResponseMessage".to_string(), "header".to_string()))?
+            .try_into()?,
+        block_color: item.block_color.into(),
+        confirmation_count: item.confirmation_count,
+        merging_chain_block_hash: item.merging_chain_block_hash.as_ref().map(|x| RpcHash::from_str(x)).transpose()?,
+        reward_amount: item.reward_amount,
     }
 });
 try_from!(item: &protowire::GetUtxoReturnAddressRequestMessage, karlsen_rpc_core::GetUtxoReturnAddressRequest , {
