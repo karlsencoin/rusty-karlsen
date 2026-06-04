@@ -34,6 +34,7 @@ cfg_if::cfg_if! {
         mod utils;
         mod hash;
         mod sign;
+        mod block;
 
         pub use header::*;
         pub use utils::*;
