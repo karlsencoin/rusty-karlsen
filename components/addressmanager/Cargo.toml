@@ -1,0 +1,33 @@
+[package]
+name = "karlsen-addressmanager"
+description = "Karlsen address manager"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+borsh.workspace = true
+igd-next.workspace = true
+itertools.workspace = true
+karlsen-consensus-core.workspace = true
+karlsen-core.workspace = true
+karlsen-database.workspace = true
+karlsen-utils.workspace = true
+local-ip-address.workspace = true
+log.workspace = true
+parking_lot.workspace = true
+rand.workspace = true
+rocksdb.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+rv.workspace = true
+
+[lints]
+workspace = true

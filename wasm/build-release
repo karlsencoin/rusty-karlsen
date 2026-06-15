@@ -1,0 +1,85 @@
+#!/bin/bash
+# This script builds the Rusty Karlsen WASM32 SDK release.
+
+# make the script fail for any failed command
+set -e
+
+rm -rf release/*
+rm -rf web/*
+rm -rf nodejs/*
+rm -rf docs/*
+rm -rf examples/nodejs/typescript/lib
+
+mkdir -p release/karlsen-wasm32-sdk/web
+mkdir -p release/karlsen-wasm32-sdk/nodejs
+mkdir -p release/karlsen-wasm32-sdk/docs
+
+# pushd .
+# cd ../rpc/wrpc/wasm
+# wasm-pack build --target web --out-name karlsen-rpc --out-dir web/karlsen-rpc --features wasm32-sdk $@
+# popd
+
+wasm-pack build --weak-refs --target web --out-name karlsen --out-dir web/karlsen-keygen --features wasm32-keygen $@
+wasm-pack build --weak-refs --dev --target web --out-name karlsen --out-dir web/karlsen-keygen-dev --features wasm32-keygen $@
+
+wasm-pack build --weak-refs --target web --out-name karlsen --out-dir web/karlsen-rpc --features wasm32-rpc $@
+wasm-pack build --weak-refs --dev --target web --out-name karlsen --out-dir web/karlsen-rpc-dev --features wasm32-rpc $@
+
+wasm-pack build --weak-refs --target web --out-name karlsen --out-dir web/karlsen-core --features wasm32-core $@
+wasm-pack build --weak-refs --dev --target web --out-name karlsen --out-dir web/karlsen-core-dev --features wasm32-core $@
+
+wasm-pack build --weak-refs --target web --out-name karlsen --out-dir web/karlsen --features wasm32-sdk $@
+wasm-pack build --weak-refs --dev --target web --out-name karlsen --out-dir web/karlsen-dev --features wasm32-sdk $@
+
+wasm-pack build --weak-refs --target nodejs --out-name karlsen --out-dir nodejs/karlsen --features wasm32-sdk $@
+wasm-pack build --weak-refs --dev --target nodejs --out-name karlsen --out-dir nodejs/karlsen-dev --features wasm32-sdk $@
+
+# wasm-pack build --target web --dev --out-name karlsen --out-dir build/docs/karlsen --features wasm32-sdk $@
+typedoc --name "Karlsen WASM32 SDK - Key Generation" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out docs/karlsen-keygen ./build/docs/karlsen-keygen.ts
+typedoc --name "Karlsen WASM32 SDK - RPC" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out docs/karlsen-rpc ./build/docs/karlsen-rpc.ts
+typedoc --name "Karlsen WASM32 SDK - Core" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out docs/karlsen-core ./build/docs/karlsen-core.ts
+typedoc --name "Karlsen WASM32 SDK" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out docs/karlsen ./build/docs/karlsen.ts
+
+# cp -r ../rpc/wrpc/wasm/web/karlsen-rpc release/karlsen-wasm32-sdk/web/karlsen-rpc
+cp -r web/karlsen-keygen release/karlsen-wasm32-sdk/web/karlsen-keygen
+cp -r web/karlsen-keygen-dev release/karlsen-wasm32-sdk/web/karlsen-keygen-dev
+
+cp -r web/karlsen-rpc release/karlsen-wasm32-sdk/web/karlsen-rpc
+cp -r web/karlsen-rpc-dev release/karlsen-wasm32-sdk/web/karlsen-rpc-dev
+
+cp -r web/karlsen-core release/karlsen-wasm32-sdk/web/karlsen-core
+cp -r web/karlsen-core-dev release/karlsen-wasm32-sdk/web/karlsen-core-dev
+
+cp -r web/karlsen release/karlsen-wasm32-sdk/web/karlsen
+cp -r web/karlsen-dev release/karlsen-wasm32-sdk/web/karlsen-dev
+
+cp -r nodejs/karlsen release/karlsen-wasm32-sdk/nodejs/karlsen
+cp -r nodejs/karlsen-dev release/karlsen-wasm32-sdk/nodejs/karlsen-dev
+
+cp -r docs/karlsen-keygen release/karlsen-wasm32-sdk/docs/karlsen-keygen
+cp -r docs/karlsen-rpc release/karlsen-wasm32-sdk/docs/karlsen-rpc
+cp -r docs/karlsen-core release/karlsen-wasm32-sdk/docs/karlsen-core
+cp -r docs/karlsen release/karlsen-wasm32-sdk/docs/karlsen
+
+mkdir -p release/karlsen-wasm32-sdk/examples/data
+cp -r examples/data/.gitignore release/karlsen-wasm32-sdk/examples/data/.gitignore
+cp -r examples/nodejs release/karlsen-wasm32-sdk/examples/
+cp -r examples/web release/karlsen-wasm32-sdk/examples/
+cp -r examples/init.js release/karlsen-wasm32-sdk/examples/
+cp -r examples/jsconfig.json release/karlsen-wasm32-sdk/examples/
+cp -r examples/package.json release/karlsen-wasm32-sdk/examples/
+
+pushd .
+cd release/karlsen-wasm32-sdk/examples
+npm install
+popd
+
+# tsc release/karlsen-wasm32-sdk/examples/nodejs/typescript/
+
+cp index.html release/karlsen-wasm32-sdk/index.html
+cp README.md release/karlsen-wasm32-sdk/README.md
+cp CHANGELOG.md release/karlsen-wasm32-sdk/CHANGELOG.md
+cp LICENSE release/karlsen-wasm32-sdk/LICENSE
+
+node build/package-sizes.js
+cp package-sizes.js release/karlsen-wasm32-sdk/package-sizes.js

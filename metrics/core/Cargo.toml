@@ -1,0 +1,25 @@
+[package]
+name = "karlsen-metrics-core"
+description = "Tools for collecting and reporting Karlsen p2p node metrics"
+rust-version.workspace = true
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+include.workspace = true
+repository.workspace = true
+
+[dependencies]
+async-trait.workspace = true
+borsh.workspace = true
+futures.workspace = true
+karlsen-core.workspace = true
+karlsen-rpc-core.workspace = true
+separator.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+workflow-core.workspace = true
+workflow-log.workspace = true
+
+[lints]
+workspace = true

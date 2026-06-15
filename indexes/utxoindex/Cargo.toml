@@ -1,0 +1,32 @@
+[package]
+name = "karlsen-utxoindex"
+description = "Karlsen UTXO index"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+futures.workspace = true
+karlsen-consensus-core.workspace = true
+karlsen-consensusmanager.workspace = true
+karlsen-core.workspace = true
+karlsen-database.workspace = true
+karlsen-hashes.workspace = true
+karlsen-index-core.workspace = true
+karlsen-utils.workspace = true
+log.workspace = true
+parking_lot.workspace = true
+rocksdb.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+karlsen-consensus.workspace = true
+rand = { workspace = true, features = ["small_rng"] }
+
+[lints]
+workspace = true
