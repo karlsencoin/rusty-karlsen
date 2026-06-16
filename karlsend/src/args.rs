@@ -93,6 +93,10 @@ pub struct Args {
     pub retention_period_days: Option<f64>,
     #[serde(rename = "full-dataset")]
     pub full_dataset: bool,
+
+    pub rocksdb_preset: Option<String>,
+    pub rocksdb_wal_dir: Option<String>,
+    pub rocksdb_cache_size: Option<usize>,
 }
 
 impl Default for Args {
@@ -145,6 +149,10 @@ impl Default for Args {
             ram_scale: 1.0,
             retention_period_days: None,
             full_dataset: false,
+
+            rocksdb_preset: None,
+            rocksdb_wal_dir: None,
+            rocksdb_cache_size: None,
         }
     }
 }
@@ -401,6 +409,33 @@ a large RAM (~64GB) can set this value to ~3.0-4.0 and gain superior performance
                 .help("The number of total days of data to keep.")
         )
         .arg(arg!(--"full-dataset" "Build full fishhash/khashv2 dataset (~4.6GB) for faster header verification and reduced compute load, otherwise use light cache (~75MB) with on-demand computation"))
+        .arg(
+            Arg::new("rocksdb-preset")
+                .long("rocksdb-preset")
+                .env("KARLSEND_ROCKSDB_PRESET")
+                .require_equals(true)
+                .value_parser(clap::value_parser!(String))
+                .help("RocksDB configuration preset: 'default' (SSD/NVMe) or 'hdd' (optimized for hard disk drives with BlobDB, compression, rate limiting). \
+                       HDD preset recommended for archival nodes on HDD storage (see docs/archival.md).")
+        )
+        .arg(
+            Arg::new("rocksdb-wal-dir")
+                .long("rocksdb-wal-dir")
+                .env("KARLSEND_ROCKSDB_WAL_DIR")
+                .require_equals(true)
+                .value_parser(clap::value_parser!(String))
+                .help("Custom WAL (Write-Ahead Log) directory for RocksDB. Useful for hybrid setups: database on HDD, WAL on fast NVMe SSD. \
+                       Example: --rocksdb-wal-dir=/mnt/nvme/karlsen-wal")
+        )
+        .arg(
+            Arg::new("rocksdb-cache-size")
+                .long("rocksdb-cache-size")
+                .env("KARLSEND_ROCKSDB_CACHE_SIZE")
+                .require_equals(true)
+                .value_parser(clap::value_parser!(usize))
+                .help("RocksDB block cache size in MB. Default: 256MB for HDD preset (scales with --ram-scale). \
+                       Increase for public RPC nodes with heavy query loads. Example: --rocksdb-cache-size=2048 for 2GB cache.")
+        )
         ;
 
     #[cfg(feature = "devnet-prealloc")]
@@ -482,6 +517,10 @@ impl Args {
             ram_scale: arg_match_unwrap_or::<f64>(&m, "ram-scale", defaults.ram_scale),
             retention_period_days: m.get_one::<f64>("retention-period-days").cloned().or(defaults.retention_period_days),
             full_dataset: arg_match_unwrap_or::<bool>(&m, "full-dataset", defaults.full_dataset),
+
+            rocksdb_preset: m.get_one::<String>("rocksdb-preset").cloned().or(defaults.rocksdb_preset),
+            rocksdb_wal_dir: m.get_one::<String>("rocksdb-wal-dir").cloned().or(defaults.rocksdb_wal_dir),
+            rocksdb_cache_size: m.get_one::<usize>("rocksdb-cache-size").cloned().or(defaults.rocksdb_cache_size),
 
             #[cfg(feature = "devnet-prealloc")]
             num_prealloc_utxos: m.get_one::<u64>("num-prealloc-utxos").cloned(),
