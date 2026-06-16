@@ -204,14 +204,15 @@ pub fn cli() -> Command {
     let cmd = Command::new("karlsend")
         .about(format!("{} (rusty-karlsen) v{}", env!("CARGO_PKG_DESCRIPTION"), version()))
         .version(env!("CARGO_PKG_VERSION"))
-        .arg(arg!(-C --configfile <CONFIG_FILE> "Path of config file."))
-        .arg(arg!(-b --appdir <DATA_DIR> "Directory to store data."))
-        .arg(arg!(--logdir <LOG_DIR> "Directory to log output."))
-        .arg(arg!(--nologfiles "Disable logging to files."))
+        .arg(arg!(-C --configfile <CONFIG_FILE> "Path of config file.").env("KARLSEND_CONFIGFILE"))
+        .arg(arg!(-b --appdir <DATA_DIR> "Directory to store data.").env("KARLSEND_APPDIR"))
+        .arg(arg!(--logdir <LOG_DIR> "Directory to log output.").env("KARLSEND_LOGDIR"))
+        .arg(arg!(--nologfiles "Disable logging to files.").env("KARLSEND_NOLOGFILES"))
         .arg(
             Arg::new("async_threads")
                 .short('t')
                 .long("async-threads")
+                .env("KARLSEND_ASYNC_THREADS")
                 .value_name("async_threads")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(usize))
@@ -221,6 +222,7 @@ pub fn cli() -> Command {
             Arg::new("log_level")
                 .short('d')
                 .long("loglevel")
+                .env("KARLSEND_LOG_LEVEL")
                 .value_name("LEVEL")
                 .default_value("info")
                 .require_equals(true)
@@ -229,6 +231,7 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("rpclisten")
                 .long("rpclisten")
+                .env("KARLSEND_RPCLISTEN")
                 .value_name("IP[:PORT]")
                 .num_args(0..=1)
                 .require_equals(true)
@@ -238,6 +241,7 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("rpclisten-borsh")
                 .long("rpclisten-borsh")
+                .env("KARLSEND_RPCLISTEN_BORSH")
                 .value_name("IP[:PORT]")
                 .num_args(0..=1)
                 .require_equals(true)
@@ -249,6 +253,7 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("rpclisten-json")
                 .long("rpclisten-json")
+                .env("KARLSEND_RPCLISTEN_JSON")
                 .value_name("IP[:PORT]")
                 .num_args(0..=1)
                 .require_equals(true)
@@ -256,10 +261,11 @@ pub fn cli() -> Command {
                 .value_parser(clap::value_parser!(WrpcNetAddress))
                 .help("Interface:port to listen for wRPC JSON connections (default port: 44110, testnet: 44210)."),
         )
-        .arg(arg!(--unsaferpc "Enable RPC commands which affect the state of the node"))
+        .arg(arg!(--unsaferpc "Enable RPC commands which affect the state of the node").env("KARLSEND_UNSAFERPC"))
         .arg(
             Arg::new("connect-peers")
                 .long("connect")
+                .env("KARLSEND_CONNECTPEERS")
                 .value_name("IP[:PORT]")
                 .action(ArgAction::Append)
                 .require_equals(true)
@@ -269,6 +275,7 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("add-peers")
                 .long("addpeer")
+                .env("KARLSEND_ADDPEERS")
                 .value_name("IP[:PORT]")
                 .action(ArgAction::Append)
                 .require_equals(true)
@@ -278,6 +285,7 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("listen")
                 .long("listen")
+                .env("KARLSEND_LISTEN")
                 .value_name("IP[:PORT]")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(ContextualNetAddress))
@@ -286,6 +294,7 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("outpeers")
                 .long("outpeers")
+                .env("KARLSEND_OUTPEERS")
                 .value_name("outpeers")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(usize))
@@ -294,6 +303,7 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("maxinpeers")
                 .long("maxinpeers")
+                .env("KARLSEND_MAXINPEERS")
                 .value_name("maxinpeers")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(usize))
@@ -302,47 +312,52 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("rpcmaxclients")
                 .long("rpcmaxclients")
+                .env("KARLSEND_RPCMAXCLIENTS")
                 .value_name("rpcmaxclients")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(usize))
                 .help("Max number of RPC clients for standard connections (default: 128)."),
         )
-        .arg(arg!(--"reset-db" "Reset database before starting node. It's needed when switching between subnetworks."))
-        .arg(arg!(--"enable-unsynced-mining" "Allow the node to accept blocks from RPC while not synced (this flag is mainly used for testing)"))
+        .arg(arg!(--"reset-db" "Reset database before starting node. It's needed when switching between subnetworks.").env("KARLSEND_RESET_DB"))
+        .arg(arg!(--"enable-unsynced-mining" "Allow the node to accept blocks from RPC while not synced (this flag is mainly used for testing)").env("KARLSEND_ENABLE_UNSYNCED_MINING"))
         .arg(
             Arg::new("enable-mainnet-mining")
                 .long("enable-mainnet-mining")
+                .env("KARLSEND_ENABLE_MAINNET_MINING")
                 .action(ArgAction::SetTrue)
                 .hide(true)
                 .help("Allow mainnet mining (currently enabled by default while the flag is kept for backwards compatibility)"),
         )
-        .arg(arg!(--utxoindex "Enable the UTXO index"))
+        .arg(arg!(--utxoindex "Enable the UTXO index").env("KARLSEND_UTXOINDEX"))
         .arg(
             Arg::new("max-tracked-addresses")
                 .long("max-tracked-addresses")
+                .env("KARLSEND_MAX_TRACKED_ADDRESSES")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(usize))
                 .help(format!("Max (preallocated) number of addresses being tracked for UTXO changed events (default: {}, maximum: {}). 
 Setting to 0 prevents the preallocation and sets the maximum to {}, leading to 0 memory footprint as long as unused but to sub-optimal footprint if used.", 
 0, Tracker::MAX_ADDRESS_UPPER_BOUND, Tracker::DEFAULT_MAX_ADDRESSES)),
         )
-        .arg(arg!(--testnet "Use the test network"))
+        .arg(arg!(--testnet "Use the test network").env("KARLSEND_TESTNET"))
         .arg(
             Arg::new("netsuffix")
                 .long("netsuffix")
+                .env("KARLSEND_NETSUFFIX")
                 .value_name("netsuffix")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(u32))
                 .help("Testnet network suffix number"),
         )
-        .arg(arg!(--devnet "Use the development test network"))
-        .arg(arg!(--simnet "Use the simulation test network"))
-        .arg(arg!(--archival "Run as an archival node: avoids deleting old block data when moving the pruning point (Warning: heavy disk usage)"))
-        .arg(arg!(--sanity "Enable various sanity checks which might be compute-intensive (mostly performed during pruning)"))
-        .arg(arg!(--yes "Answer yes to all interactive console questions"))
+        .arg(arg!(--devnet "Use the development test network").env("KARLSEND_DEVNET"))
+        .arg(arg!(--simnet "Use the simulation test network").env("KARLSEND_SIMNET"))
+        .arg(arg!(--archival "Run as an archival node: avoids deleting old block data when moving the pruning point (Warning: heavy disk usage)").env("KARLSEND_ARCHIVAL"))
+        .arg(arg!(--sanity "Enable various sanity checks which might be compute-intensive (mostly performed during pruning)").env("KARLSEND_SANITY"))
+        .arg(arg!(--yes "Answer yes to all interactive console questions").env("KARLSEND_NONINTERACTIVE"))
         .arg(
             Arg::new("user_agent_comments")
                 .long("uacomment")
+                .env("KARLSEND_USER_AGENT_COMMENTS")
                 .action(ArgAction::Append)
                 .require_equals(true)
                 .help("Comment to add to the user agent -- See BIP 14 for more information."),
@@ -350,26 +365,29 @@ Setting to 0 prevents the preallocation and sets the maximum to {}, leading to 0
         .arg(
             Arg::new("externalip")
                 .long("externalip")
+                .env("KARLSEND_EXTERNALIP")
                 .value_name("externalip")
                 .require_equals(true)
                 .default_missing_value(None)
                 .value_parser(clap::value_parser!(ContextualNetAddress))
                 .help("Add a socket address(ip:port) to the list of local addresses we claim to listen on to peers"),
         )
-        .arg(arg!(--"perf-metrics" "Enable performance metrics: cpu, memory, disk io usage"))
+        .arg(arg!(--"perf-metrics" "Enable performance metrics: cpu, memory, disk io usage").env("KARLSEND_PERF_METRICS"))
         .arg(
             Arg::new("perf-metrics-interval-sec")
                 .long("perf-metrics-interval-sec")
+                .env("KARLSEND_PERF_METRICS_INTERVAL_SEC")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(u64))
                 .help("Interval in seconds for performance metrics collection."),
         )
-        .arg(arg!(--"disable-upnp" "Disable upnp"))
-        .arg(arg!(--"nodnsseed" "Disable DNS seeding for peers"))
-        .arg(arg!(--"nogrpc" "Disable gRPC server"))
+        .arg(arg!(--"disable-upnp" "Disable upnp").env("KARLSEND_DISABLE_UPNP"))
+        .arg(arg!(--"nodnsseed" "Disable DNS seeding for peers").env("KARLSEND_NODNSSEED"))
+        .arg(arg!(--"nogrpc" "Disable gRPC server").env("KARLSEND_NOGRPC"))
         .arg(
             Arg::new("ram-scale")
                 .long("ram-scale")
+                .env("KARLSEND_RAM_SCALE")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(f64))
                 .help("Apply a scale factor to memory allocation bounds. Nodes with limited RAM (~4-8GB) should set this to ~0.3-0.5 respectively. Nodes with
