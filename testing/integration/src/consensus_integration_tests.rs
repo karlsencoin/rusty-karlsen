@@ -62,7 +62,7 @@ use karlsen_core::signals::Shutdown;
 use karlsen_core::task::runtime::AsyncRuntime;
 use karlsen_core::{assert_match, info};
 use karlsen_database::create_temp_db;
-use karlsen_database::prelude::{CachePolicy, ConnBuilder};
+use karlsen_database::prelude::{CachePolicy, ConnBuilder, RocksDbPreset};
 use karlsen_index_processor::service::IndexService;
 use karlsen_math::Uint256;
 use karlsen_muhash::MuHash;
@@ -814,6 +814,7 @@ impl KarlsendGoParams {
         let finality_depth = self.FinalityDuration / self.TargetTimePerBlock;
         Params {
             dns_seeders: &[],
+            fallback_peers: &[],
             net: NetworkId { network_type: Mainnet, suffix: None },
             genesis: GENESIS,
             prior_ghostdag_k: self.K,
@@ -1768,6 +1769,9 @@ async fn staging_consensus_test() {
         200,
         Arc::new(MiningRules::default()),
         fish_context,
+        RocksDbPreset::Default,
+        None, // wal_dir
+        None, // cache_budget
     ));
     let consensus_manager = Arc::new(ConsensusManager::new(consensus_factory));
 
