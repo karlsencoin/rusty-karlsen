@@ -2545,7 +2545,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-addresses"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "borsh",
  "criterion",
@@ -2562,7 +2562,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-addressmanager"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "borsh",
  "igd-next",
@@ -2584,14 +2584,14 @@ dependencies = [
 
 [[package]]
 name = "karlsen-alloc"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "mimalloc",
 ]
 
 [[package]]
 name = "karlsen-bip32"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "borsh",
  "bs58",
@@ -2618,7 +2618,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-cli"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "borsh",
@@ -2665,7 +2665,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-connectionmanager"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "duration-string",
  "futures-util",
@@ -2682,7 +2682,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-consensus"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "arc-swap",
  "async-channel 2.5.0",
@@ -2726,7 +2726,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-consensus-client"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "ahash",
  "cfg-if 1.0.4",
@@ -2754,7 +2754,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-consensus-core"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "arc-swap",
  "async-trait",
@@ -2793,7 +2793,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-consensus-notify"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "cfg-if 1.0.4",
@@ -2812,7 +2812,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-consensus-wasm"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "cfg-if 1.0.4",
  "faster-hex",
@@ -2836,7 +2836,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-consensusmanager"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "duration-string",
  "futures",
@@ -2855,7 +2855,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-core"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "anyhow",
  "cfg-if 1.0.4",
@@ -2874,7 +2874,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-daemon"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "borsh",
@@ -2896,7 +2896,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-database"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "bincode",
  "enum-primitive-derive",
@@ -2918,7 +2918,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-grpc-client"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "async-stream",
@@ -2950,7 +2950,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-grpc-core"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "async-stream",
@@ -2981,7 +2981,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-grpc-server"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "async-stream",
@@ -3017,7 +3017,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-hashes"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "blake2b_simd",
  "blake3",
@@ -3042,7 +3042,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-index-core"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "async-trait",
@@ -3061,7 +3061,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-index-processor"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "async-trait",
@@ -3089,7 +3089,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-math"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "borsh",
  "criterion",
@@ -3110,14 +3110,14 @@ dependencies = [
 
 [[package]]
 name = "karlsen-merkle"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "karlsen-hashes",
 ]
 
 [[package]]
 name = "karlsen-metrics-core"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "borsh",
@@ -3133,7 +3133,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-mining"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "criterion",
  "futures-util",
@@ -3160,7 +3160,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-mining-errors"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "karlsen-consensus-core",
  "thiserror 1.0.69",
@@ -3168,7 +3168,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-muhash"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "criterion",
  "karlsen-hashes",
@@ -3181,7 +3181,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-notify"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "async-trait",
@@ -3217,7 +3217,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-p2p-flows"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "chrono",
@@ -3249,7 +3249,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-p2p-lib"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "borsh",
  "ctrlc",
@@ -3280,7 +3280,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-p2p-mining"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "karlsen-consensus-core",
  "karlsen-consensusmanager",
@@ -3297,7 +3297,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-perf-monitor"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "karlsen-core",
  "log",
@@ -3309,7 +3309,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-pow"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "criterion",
  "js-sys",
@@ -3325,7 +3325,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-rpc-core"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "async-trait",
@@ -3367,7 +3367,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-rpc-macros"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "convert_case 0.6.0",
  "proc-macro-error",
@@ -3379,7 +3379,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-rpc-service"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "karlsen-addresses",
@@ -3409,7 +3409,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-testing-integration"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "async-trait",
@@ -3469,7 +3469,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-txscript"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "blake2b_simd",
  "borsh",
@@ -3501,7 +3501,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-txscript-errors"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "secp256k1",
  "thiserror 1.0.69",
@@ -3509,7 +3509,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-utils"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "arc-swap",
  "async-channel 2.5.0",
@@ -3545,7 +3545,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-utils-tower"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "bytes",
  "cfg-if 1.0.4",
@@ -3561,7 +3561,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-utxoindex"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "futures",
  "karlsen-consensus",
@@ -3582,7 +3582,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wallet"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-std",
  "async-trait",
@@ -3594,7 +3594,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wallet-cli-wasm"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "js-sys",
@@ -3608,7 +3608,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wallet-core"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "aes",
  "ahash",
@@ -3689,7 +3689,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wallet-keys"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "borsh",
@@ -3722,7 +3722,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wallet-macros"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "convert_case 0.5.0",
  "proc-macro-error",
@@ -3735,7 +3735,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wallet-pskt"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "bincode",
  "derive_builder",
@@ -3765,7 +3765,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wasm"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "cfg-if 1.0.4",
  "js-sys",
@@ -3793,7 +3793,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wasm-core"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "faster-hex",
  "hexplay",
@@ -3804,7 +3804,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wrpc-client"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-std",
  "async-trait",
@@ -3840,7 +3840,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wrpc-example-subscriber"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "ctrlc",
  "futures",
@@ -3855,7 +3855,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wrpc-proxy"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "clap 4.6.0",
@@ -3874,7 +3874,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wrpc-server"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-trait",
  "borsh",
@@ -3902,7 +3902,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wrpc-simple-client-example"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "futures",
  "karlsen-rpc-core",
@@ -3912,7 +3912,7 @@ dependencies = [
 
 [[package]]
 name = "karlsen-wrpc-wasm"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "ahash",
  "async-std",
@@ -3942,7 +3942,7 @@ dependencies = [
 
 [[package]]
 name = "karlsend"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "cfg-if 1.0.4",
@@ -5464,7 +5464,7 @@ dependencies = [
 
 [[package]]
 name = "rothschild"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "clap 4.6.0",
@@ -5945,7 +5945,7 @@ checksum = "703d5c7ef118737c72f1af64ad2f6f8c5e1921f818cdcb97b8fe6fc69bf66214"
 
 [[package]]
 name = "simpa"
-version = "3.2.0"
+version = "3.3.0"
 dependencies = [
  "async-channel 2.5.0",
  "cfg-if 1.0.4",
