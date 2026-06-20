@@ -3,7 +3,7 @@ use karlsen_muhash::MuHash;
 use std::sync::Arc;
 
 use crate::{
-    acceptance_data::{AcceptanceData, MergedBlockContext, MergesetBlockAcceptanceData},
+    acceptance_data::{AcceptanceData, MergedBlockContext},
     api::args::{TransactionValidationArgs, TransactionValidationBatchArgs},
     block::{Block, BlockTemplate, TemplateBuildMode, TemplateTransactionSelector, VirtualStateApproxId},
     blockstatus::BlockStatus,
