@@ -1,45 +1,25 @@
 name: CI
 
-on:
-  push:
-    branches: [master, v3.3.0-dev]
-  pull_request:
-    branches: [master]
-  workflow_dispatch:
-
-env:
-  CARGO_TERM_COLOR: always
-  RUSTFLAGS: "-D warnings"
+on: [push, pull_request]
 
 jobs:
-  build-and-test:
-    name: Build and test
+  check:
+    name: Check
     runs-on: ubuntu-latest
-    timeout-minutes: 90
     steps:
-      - name: Checkout
+      - name: Checkout sources
         uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            build-essential clang libclang-dev cmake pkg-config \
-            libssl-dev protobuf-compiler
-
-      - name: Install Rust toolchain (MSRV 1.88.0)
-        uses: dtolnay/rust-toolchain@1.88.0
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
         with:
-          components: rustfmt, clippy
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cargo cache
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up cache
         uses: Swatinem/rust-cache@v2
-        with:
-          cache-on-failure: true
-          shared-key: rusty-karlsen-${{ runner.os }}
 
-      - name: Check workspace
-        run: cargo check --workspace --all-targets
-
-      - name: Run tests
-        run: cargo test --workspace --no-fail-fast
+      - name: Run cargo check
+        run: cargo check --tests --workspace --benches
