@@ -3,7 +3,7 @@
 //! We use newtypes in order to simplify changing the underlying lock in the future
 
 use karlsen_consensus_core::{
-    acceptance_data::{AcceptanceData, MergedBlockContext, MergesetBlockAcceptanceData},
+    acceptance_data::{AcceptanceData, MergedBlockContext},
     api::{BlockCount, BlockValidationFutures, ConsensusApi, ConsensusStats, DynConsensus},
     block::Block,
     blockstatus::BlockStatus,
