@@ -604,6 +604,7 @@ do you confirm? (answer y/n or pass --yes to the Karlsend command line to confir
         hub.clone(),
         mining_rule_engine.clone(),
     ));
+    
     let p2p_service = Arc::new(P2pService::new(
         flow_context.clone(),
         connect_peers,
@@ -612,6 +613,7 @@ do you confirm? (answer y/n or pass --yes to the Karlsend command line to confir
         outbound_target,
         inbound_limit,
         dns_seeders,
+        config.params.fallback_peers.clone(),
         config.default_p2p_port(),
         p2p_tower_counters.clone(),
     ));

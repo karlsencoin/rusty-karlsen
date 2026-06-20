@@ -22,6 +22,7 @@ pub struct P2pService {
     outbound_target: usize,
     inbound_limit: usize,
     dns_seeders: &'static [&'static str],
+    fallback_peers: &'static [&'static str],
     default_port: u16,
     shutdown: SingleTrigger,
     counters: Arc<TowerConnectionCounters>,
@@ -36,6 +37,7 @@ impl P2pService {
         outbound_target: usize,
         inbound_limit: usize,
         dns_seeders: &'static [&'static str],
+        fallback_peers: &'static [&'static str],
         default_port: u16,
         counters: Arc<TowerConnectionCounters>,
     ) -> Self {
@@ -48,6 +50,7 @@ impl P2pService {
             outbound_target,
             inbound_limit,
             dns_seeders,
+            fallback_peers,
             default_port,
             counters,
         }
@@ -76,6 +79,7 @@ impl AsyncService for P2pService {
             self.outbound_target,
             self.inbound_limit,
             self.dns_seeders,
+            self.fallback_peers,
             self.default_port,
             self.flow_context.address_manager.clone(),
         );

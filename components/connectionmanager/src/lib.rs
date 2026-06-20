@@ -29,6 +29,7 @@ pub struct ConnectionManager {
     outbound_target: usize,
     inbound_limit: usize,
     dns_seeders: &'static [&'static str],
+    fallback_peers: &'static [&'static str],
     default_port: u16,
     address_manager: Arc<ParkingLotMutex<AddressManager>>,
     connection_requests: TokioMutex<HashMap<SocketAddr, ConnectionRequest>>,
@@ -55,6 +56,7 @@ impl ConnectionManager {
         outbound_target: usize,
         inbound_limit: usize,
         dns_seeders: &'static [&'static str],
+        fallback_peers: &'static [&'static str],
         default_port: u16,
         address_manager: Arc<ParkingLotMutex<AddressManager>>,
     ) -> Arc<Self> {
@@ -68,6 +70,7 @@ impl ConnectionManager {
             force_next_iteration: tx,
             shutdown_signal: SingleTrigger::new(),
             dns_seeders,
+            fallback_peers,
             default_port,
         });
         manager.clone().start_event_loop(rx);
@@ -230,11 +233,20 @@ impl ConnectionManager {
             if missing_connections > self.outbound_target / 2 {
                 // If we are missing more than half of our target, query all in parallel.
                 // This will always be the case on new node start-up and is the most resilient strategy in such a case.
-                self.dns_seed_many(self.dns_seeders.len()).await;
+                let fetched = self.dns_seed_many(self.dns_seeders.len()).await;
+                // If DNS seeders failed to return any peers, use fallback peer list
+                if fetched == 0 && !self.fallback_peers.is_empty() {
+                    warn!("DNS seeders failed to return any peers, using fallback peer list");
+                    self.use_fallback_peers();
+                }
             } else {
                 // Try to obtain at least twice the number of missing connections
                 self.dns_seed_with_address_target(2 * missing_connections).await;
             }
+        } else if missing_connections > 0 && !self.fallback_peers.is_empty() {
+            // No DNS seeders configured, use fallback peer list directly
+            info!("No DNS seeders configured, using fallback peer list");
+            self.use_fallback_peers();
         }
     }
 
@@ -306,6 +318,46 @@ impl ConnectionManager {
         }
 
         addrs_len
+    }
+
+    /// Get the geographic location for a given peer address.
+    /// Returns the location string or "Unknown" if not found.
+    fn get_peer_location(peer: &str) -> &'static str {
+        match peer {
+            "72.82.146.74:42111" => "Frankfurt, Germany",
+            "194.67.186.21:42111" => "Moscow, Russia",
+            "51.77.132.161:42111" => "Roubaix, France",
+            "142.44.138.38:42111" => "Vancouver, Canada",
+            "78.83.102.26:42111" => "Sofia, Bulgaria",
+            "83.78.96.42:42111" => "Berlin, Germany",
+            "88.99.173.150:42111" => "Nürnberg, Germany",
+            "149.58.116.83:42111" => "Warsaw, Poland",
+            "46.4.58.228:42111" => "Prishtina, Kosovo",
+            "212.23.222.231:42111" => "Poland",
+            "76.185.19.41:42111" => "Estero Heights, United States",
+            _ => "Unknown",
+        }
+    }
+
+    /// Add fallback peers to the address manager.
+    ///
+    /// This is used as a backup when DNS seeders are unavailable or fail to return any peers.
+    /// Fallback peers are hardcoded IP:port combinations that are known to be reliable.
+    fn use_fallback_peers(&self) {
+        info!("Using fallback peer list ({} peers)", self.fallback_peers.len());
+        let mut amgr_lock = self.address_manager.lock();
+        let mut added = 0;
+        for peer_str in self.fallback_peers {
+            if let Ok(addr) = peer_str.parse::<SocketAddr>() {
+                let location = Self::get_peer_location(peer_str);
+                amgr_lock.add_address(NetAddress::new(addr.ip().into(), addr.port()));
+                info!("Added fallback peer: {} ({})", peer_str, location);
+                added += 1;
+            } else {
+                warn!("Invalid fallback peer address: {}", peer_str);
+            }
+        }
+        info!("Successfully added {} fallback peers to address manager", added);
     }
 
     /// Bans the given IP and disconnects from all the peers with that IP.

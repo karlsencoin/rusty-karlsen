@@ -200,6 +200,7 @@ pub const CRESCENDO: CrescendoParams = CrescendoParams {
 #[derive(Clone, Debug)]
 pub struct Params {
     pub dns_seeders: &'static [&'static str],
+    pub fallback_peers: &'static [&'static str],
     pub net: NetworkId,
     pub genesis: GenesisBlock,
     pub prior_ghostdag_k: KType,
@@ -482,7 +483,16 @@ impl From<NetworkId> for Params {
 }
 
 pub const MAINNET_PARAMS: Params = Params {
-    dns_seeders: &["mainnet-dnsseed-1.karlsencoin.com", "mainnet-dnsseed-2.karlsencoin.com"],
+    dns_seeders: &["mainnet-dnsseed-1.karlsencoin.org", "mainnet-dnsseed-2.karlsencoin.org"],
+    fallback_peers: &[
+        "72.62.146.74:42111",     // Frankfurt am Main, Germany (VPS)
+        "46.4.58.220:42111",      // Falkenstein, Germany
+        "142.44.138.30:42111",    // Montreal, Canada
+        "149.50.116.83:42111",    // Warsaw, Poland
+        "78.83.102.26:42111",     // Sofia, Bulgaria
+        "83.78.96.42:42111",      // Lausanne, Switzerland
+        "88.99.173.150:42111",    // Nuremberg, Germany
+    ],
     net: NetworkId::new(NetworkType::Mainnet),
     genesis: GENESIS,
     prior_ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
@@ -537,7 +547,8 @@ pub const MAINNET_PARAMS: Params = Params {
 };
 
 pub const TESTNET_PARAMS: Params = Params {
-    dns_seeders: &["testnet-1-dnsseed.karlsencoin.com"],
+    dns_seeders: &["testnet-1-dnsseed.karlsencoin.org"],
+    fallback_peers: &[],
     net: NetworkId::with_suffix(NetworkType::Testnet, 1),
     genesis: TESTNET_GENESIS,
     prior_ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
@@ -589,6 +600,7 @@ pub const TESTNET_PARAMS: Params = Params {
 
 pub const SIMNET_PARAMS: Params = Params {
     dns_seeders: &[],
+    fallback_peers: &[],
     net: NetworkId::new(NetworkType::Simnet),
     genesis: SIMNET_GENESIS,
     timestamp_deviation_tolerance: TIMESTAMP_DEVIATION_TOLERANCE,
@@ -639,6 +651,7 @@ pub const SIMNET_PARAMS: Params = Params {
 
 pub const DEVNET_PARAMS: Params = Params {
     dns_seeders: &[],
+    fallback_peers: &[],
     net: NetworkId::new(NetworkType::Devnet),
     genesis: DEVNET_GENESIS,
     prior_ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
