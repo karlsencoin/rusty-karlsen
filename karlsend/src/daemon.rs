@@ -679,7 +679,7 @@ do you confirm? (answer y/n or pass --yes to the Karlsend command line to confir
         outbound_target,
         inbound_limit,
         dns_seeders,
-        config.params.fallback_peers.clone(),
+        config.params.fallback_peers,
         config.default_p2p_port(),
         p2p_tower_counters.clone(),
     ));
